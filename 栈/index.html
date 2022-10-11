@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>栈结构</title>
+</head>
+
+<body>
+    <p>
+        栈内的元素只能通过列表的一端访问，这一端称为栈顶。
+    </p>
+    <p>
+        咖啡厅内 的一摞盘子是现实世界中常见的栈的例子。只能从最上面取盘子，盘子洗净后，也只能摞 在这一摞盘子的最上面
+    </p>
+    <p>
+        栈是一种后入先出（LIFO，last-in-ﬁrst-out）的数据结构。
+        由于栈具有后入先出的特点，所以任何不在栈顶的元素都无法访问。为了得到栈底的元 素，必须先拿掉上面的元素。
+    </p>
+
+    <script>
+        // 实现一个栈机构
+        function Stack() {
+            this.dataStore = []; // 存放栈的数据
+            this.top = 0;
+        }
+        Stack.prototype = {
+            // 推入元素方法
+            push: function (element) {
+                this.dataStore[this.top++] = element
+            },
+            // 删除元素方法
+            pop: function () {
+                return this.dataStore[--this.top];
+            },
+            // 查看栈顶元素方法
+            peek: function () {
+                return this.dataStore[this.top - 1]
+            },
+            length: function () {
+                return this.top
+            },
+            clear: function () {
+                this.top = 0
+            }
+        }
+
+        let s = new Stack();
+        s.push("1");
+        s.push("2");
+        s.push("3");
+        console.log("length: " + s.length()); // 3
+        console.log(s.peek()); // 3
+        let popped = s.pop();
+        console.log("The popped element is: " + popped); // 3
+        console.log(s.peek()); // 2
+        s.push("4");
+        console.log(s.peek()); // 4
+        s.clear();
+        console.log("length: " + s.length()); // 0
+        console.log(s.peek()); // undefined
+        s.push("5"); 
+        console.log(s.peek()); // 5
+
+
+        // 通过栈结构判断字符串是否是回文字符串解法
+        function isPalindrome(word) {
+            let s = new Stack();
+            for (let i = 0; i < word.length; ++i) {
+                s.push(word[i]);
+            }
+            let rword = "";
+            while (s.length() > 0) {
+                rword += s.pop();
+            }
+            if (word == rword) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        console.log(isPalindrome('hello')); // false
+        console.log(isPalindrome('abcba')); // true
+
+        // 通过栈结构实现下面的阶乘递归函数
+        function factorial(n) {
+            if (n === 0) {
+                return 1;
+            } else {
+                return n * factorial(n - 1);
+            }
+        }
+        // 通过栈进行改造
+        function fact (n) {
+            let s = new Stack();
+            let r = 1;
+            while (n > 1) {
+                s.push(n--)
+            }
+            while (s.length() > 0) {
+                r *= s.pop()
+            }
+            return r
+        }
+        console.log(factorial(5)) // 120
+        console.log(fact(5)) // 120
+
+        // 例子：接收一个算术表达式作为参数，返回括号缺失的位置。
+        function isMissBrackets (str) {
+            let s = new Stack();
+            let map = '{}()[]'
+            for (let i = 0; i < str.length; i++) {
+                if (map.includes(str[i])) {
+                    let val = str[i];
+                    switch (val) {
+                        case '(':
+                            s.push(val)
+                            break;
+                    
+                        case ')':
+                            let map1 = s.pop();
+                            if (map1 !== '(') {
+                                return `位置${i}的)不匹配`
+                            }
+                            break;
+                    }
+                }
+            }
+            console.log(s)
+            if (s.length()) {
+                let r = ''
+                while (s.length() >0) {
+                     r += `符号${s.pop()}没有闭合`
+                }
+                return r
+            } else {
+                return '符号正确'
+            }
+        }
+        console.log(isMissBrackets('2.3 + 23 / 12 + (3.14159×0.24')); // 符号(没有闭合
+        console.log(isMissBrackets('1+2+3+[(4*5))')); // 位置12的)不匹配
+        console.log(isMissBrackets('2.3 + 23 / 12 + (3.14159×0.24)')); // 符号正确
+
+        //有一盒佩兹糖果，里面塞满了红 色、黄色和白色的糖果，但是你不喜欢黄色的糖果。使用栈（有可能用到多个栈）写一 段程序，在不改变盒内其他糖果叠放顺序的基础上，将黄色糖果移出
+        // 思路：定义两个栈，将不需要的取出放到其中一个栈，将需要的放到另一个栈。最后原本存在糖果的栈是空栈，在重新将需要的推入栈
+        // 因为出栈是从最后一个移除，装有糖果的栈中元素会逆转顺序推入。那么重新推入栈中时倒数第一个便是原有的第一个
+
+        function selectSweets(target) {
+            // 定义存放糖果的栈
+            let sweeteStore = new Stack();
+                sweeteStore.push('red --01')
+                sweeteStore.push('yellow --01')
+                sweeteStore.push('white --01')
+                sweeteStore.push('red --02')
+                sweeteStore.push('red --03')
+                sweeteStore.push('white --02')
+                sweeteStore.push('yellow --02')
+                sweeteStore.push('white --03')
+            // 想获取的糖果的栈
+            let haveSweet = new Stack()
+            // 不想要的糖果的栈
+            let rejectSweet = new Stack()
+
+            // 基础顺序是 红01-> 黄01-> 白01-> 红02 -> 红03-> 白02 -> 黄02-> 白03 (栈底开始往上)
+            // 排除黄色后的顺序是 红01-> 白01-> 红02 -> 红03-> 白02 -> 白03 (栈底开始往上)
+            while (sweeteStore.length() > 0) {
+                if (sweeteStore.peek().includes(target)) {
+                    let last = sweeteStore.pop()
+                    rejectSweet.push(last)
+                } else {
+                    let last = sweeteStore.pop()
+                    haveSweet.push(last)
+                }
+            }
+            while (haveSweet.length() > 0) {
+                sweeteStore.push(haveSweet.pop())
+            }
+            // 打印结果
+            let r = ''
+            while (sweeteStore.length() > 0) {
+                r += '--> ' + sweeteStore.pop()
+            }
+            return r; // white --03--> white --02--> red --03--> red --02--> white --01--> red --01
+        }
+        selectSweets('yellow')
+    </script>
+</body>
+
+</html>
