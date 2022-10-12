@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>队列结构</title>
+</head>
+
+<body>
+    <p>
+        队列是一种列表，不同的是队列只能在队尾插入元素，在队首删除元素。
+    </p>
+    <p>
+        队列用于存储按 顺序排列的数据，先进先出，这点和栈不一样，在栈中，最后入栈的元素反而被优先处理。可以将队列想象成在银行前排队的人群，排在最前面的人第一个办理业务，新来的人 只能在后面排队，直到轮到他们为止。
+    </p>
+    <p>
+        队列是一种先进先出（First-In-First-Out，FIFO）的数据结构。队列被用在很多地方，比如 提交操作系统执行的一系列进程、打印任务池等，一些仿真系统用队列来模拟银行或杂货 店里排队的顾客。
+    </p>
+
+    <script>
+        // 实现队列结构
+        function Queue() {
+            this.dataStore = []; // 存放队列的数据
+        }
+        Queue.prototype = {
+            enqueue: function (element) {
+                // 推入元素
+                this.dataStore.push(element);
+            },
+            dequeue: function () {
+                // 删除队首的元素
+                return this.dataStore.shift();
+            },
+            front: function () {
+                // 获取队首的元素
+                return this.dataStore[0];
+            },
+            back: function () {
+                // 获取队尾的元素
+                return this.dataStore[this.dataStore.length - 1];
+            },
+            toString: function () {
+                // 输出队列的元素
+                let r = '';
+                for (let i = 0; i < this.dataStore.length; i++) {
+                    r += this.dataStore[i] + ' ';
+                }
+                return r;
+            },
+            empty: function () {
+                // 判断队列是否为空
+                return this.dataStore.length === 0;
+            }
+        }
+
+        const q = new Queue();
+        q.enqueue("1");
+        q.enqueue("2");
+        q.enqueue("3");
+        console.log(q.toString()); // 1 2 3
+        q.dequeue();
+        console.log(q.toString()); // 1 2
+        console.log("Front of queue: " + q.front()); // 2
+        console.log("Back of queue: " + q.back()); // 3
+
+
+        // 使用队列来模拟跳方块舞的人:
+        // 当男男女女来到舞池，他们按照自己的性别排成两队。当舞池中有地方空出来时，选两个队列中的第一个人组成舞伴。
+        // 他们身后的人各自向前移动一位，变成新的队首。
+        // 当一对舞伴 迈入舞池时，主持人会大声喊出他们的名字。
+        // 当一对舞伴走出舞池，且两排队伍中有任意 一队没人时，主持人也会把这个情况告诉大家
+
+        // 定义男女的数组，M代表男，W代表女
+        const people = ['M-M1', 'W-W1', 'M-M2', 'W-W2', 'M-M3', 'W-W3', 'M-M4', 'W-W4', 'M-M5'];
+        // 首先将男女分开至各自的队列
+        function party (allPeople) {
+            this.manQueue = new Queue();
+            this.womenQueue = new Queue();
+            allPeople.map(x => {
+                if (x.indexOf('M-') > -1) {
+                    this.manQueue.enqueue(x);
+                } else {
+                    this.womenQueue.enqueue(x);
+                }
+            })
+        }
+        party.prototype = {
+            pair: function (){
+                // 男女配对
+                while (!this.manQueue.empty() && !this.womenQueue.empty()) {
+                    let manFirst = this.manQueue.dequeue();
+                    let womenFirst = this.womenQueue.dequeue();
+                    console.log(`当前配对的是 ${manFirst}先生 和 ${womenFirst} 小姐`);
+                }
+                if (this.manQueue.empty()) {
+                    console.log('男士队列清空');
+                } else if (this.womenQueue.empty()) {
+                    console.log('女士队列清空');
+                }
+            }
+        }
+        const partyFn = new party(people);
+        partyFn.pair();
+    </script>
+</body>
+
+</html>

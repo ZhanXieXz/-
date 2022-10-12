@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>优先队列</title>
+</head>
+
+<body>
+    <p>
+        在一般情况下，从队列中删除的元素，一定是率先入队的元素。但是也有一些使用队列的应用，在删除元素时不必遵守先进先出的约定。这种叫做优先队列数据结构
+    </p>
+    <p>
+        从优先队列中删除元素时，需要考虑优先权的限制
+    </p>
+    <script>
+        // 定义存储队列元素的对象
+        /**
+         * @param {code} Number
+         */
+        function Patient(name, code) {
+            this.name = name;
+            this.code = code;
+        }
+        // 改造队列, 重写dequeue和tostring方法
+        function PriorityQueue() {
+            this.dataStore = [];
+        }
+        PriorityQueue.prototype = {
+            enqueue: function (element) {
+                // 推入元素
+                this.dataStore.push(element);
+            },
+            dequeue: function () {
+                // let priority = this.dataStore[0].code; // 队首的code
+                // for (let i = 1; i < this.dataStore.length; ++i) {
+                //     if (this.dataStore[i].code < priority) {
+
+                //         priority = i
+                //     }
+                // }
+                // console.log(priority)
+                // return this.dataStore.splice(priority, 1)
+                let priority = this.dataStore[0].code;
+                let first = 1
+                for (var i = 1; i < this.dataStore.length; ++i) {
+                    if (this.dataStore[i].code < priority) {
+                        priority = this.dataStore[i].code;
+                        first = i
+                    }
+                }
+                return this.dataStore.splice(first, 1);
+            },
+            front: function () {
+                // 获取队首的元素
+                return this.dataStore[0];
+            },
+            back: function () {
+                // 获取队尾的元素
+                return this.dataStore[this.dataStore.length - 1];
+            },
+            toString: function () {
+                var r = "";
+                for (let i = 0; i < this.dataStore.length; ++i) {
+                    r += this.dataStore[i].name + " code: " + this.dataStore[i].code + "\n";
+                }
+                return r;
+            },
+            empty: function () {
+                // 判断队列是否为空
+                return this.dataStore.length === 0;
+            }
+        }
+        let p = new Patient("5", 5);
+        const ed = new PriorityQueue();
+        ed.enqueue(p);
+        p = new Patient("4", 4);
+        ed.enqueue(p);
+        p = new Patient("6", 6);
+        ed.enqueue(p);
+        p = new Patient("1", 1);
+        ed.enqueue(p);
+        p = new Patient("2", 2);
+        ed.enqueue(p);
+        console.log(ed.toString());
+        let seen = ed.dequeue();
+        console.log( seen[0].name);
+        console.log(ed.toString())
+    </script>
+</body>
+
+</html>
