@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>双向链表结构</title>
+</head>
+
+<body>
+    <p>
+        从链表的头节点遍历到尾节点很简单，但反过来，从后向前遍历则没那么简单。可以通过给Node对象增加一个属性，该属性存储指向前驱节点。此时向链表插入一个节点需要更多的工作，我们需要指出该节点正确的前驱和后继。但从链表中删除节点时，效率提高了，不需要再查找待删除节点的前驱节点
+    </p>
+    <script>
+        // 实现一个链表
+
+        // Node类中添加多一个previous属性，指向上一个节点
+        function Node(element) {
+            this.element = element;
+            this.next = null;
+            this.previous = null;
+        }
+
+        // LinkedList 类
+        function LList() {
+            this.head = new Node('head');
+        }
+
+        LList.prototype = {
+            insert: function (newElement, item) {
+                // 向链表插入节点。 跟跟单向链表不同的是多了一个previous属性，指向了上一个节点
+                let newNode = new Node(newElement); // 定义新节点
+                let currentNode = this.find(item); // 查找需要插入的节点位置
+                newNode.next = currentNode.next; // 新节点的next 是指向当前节点的next，比如 head -> 1 -> 2，新节点3需要插入到1的位置，那么3的next指向就是1.head的next指向就是3。head -> 3 -> 1 -> 2
+                newNode.previous = currentNode; // 指向上一个节点
+                currentNode.next = newNode; // 当前节点的next指向新节点
+            },
+            find: function (item) {
+                // 查找节点
+                let currentNode = this.head;
+                while (currentNode.element !== item) { // 如果当前元素不等于查找元素，那么就重复赋值currentNode给下一个元素，直到找到为止
+                    currentNode = currentNode.next;
+                }
+                return currentNode;
+            },
+            findLast: function () {
+                // 查找最后一个节点
+                let currentNode = this.head;
+                while (currentNode.next !== null) { // 如果当前元素不等于查找元素，那么就重复赋值currentNode给下一个元素，直到找到为止
+                    currentNode = currentNode.next;
+                }
+                return currentNode;
+            },
+            remove: function (item) {
+                // 刪除节点。双向链表不需要再查找上一个节点元素了
+                let currentNode = this.find(item);
+                if (currentNode.next !== null) {
+                    currentNode.previous.next = currentNode.next;
+                    currentNode.next.previous = currentNode.previous;
+                    currentNode.next = null;
+                    currentNode.previous = null;
+                }
+            },
+            display: function () {
+                // 打印列表的节点
+                let currentNode = this.head;
+                let r = ''
+                while (currentNode.next !== null) {
+                    r += currentNode.next.element + ' -> ';
+                    currentNode = currentNode.next;
+                }
+                console.log('head -> ' + r + 'null');
+            },
+            reverseDisplay: function () {
+                // 逆向打印链表
+                let lastNode = this.findLast();
+                let r = lastNode.element;
+                while (lastNode.previous !== null) {
+                    r += ' <- ' + lastNode.previous.element;
+                    lastNode = lastNode.previous;
+                }
+                console.log('null <-' + r)
+            }
+        }
+        var testList = new LList();
+        testList.insert("1", "head");
+        testList.insert("2", "1");
+        testList.insert("3", "2");
+        testList.insert("4", "3");
+        testList.display(); // head -> 1 -> 2 -> 3 -> 4 -> null
+        testList.reverseDisplay(); // null <-4 <- 3 <- 2 <- 1 <- head
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>循环链表结构</title>
+</head>
+
+<body>
+    <p>
+        循环链表和单向链表相似，节点类型都是一样的。唯一的区别是，在创建循环链表时，让 其头节点的 next 属性指向它本身，即：
+        head.next = head
+    </p>
+    <hr>
+    <p>
+        传说在公元 1 世纪的犹太战争中，犹太历史学家弗拉维奥·约瑟夫斯和他的 40 个同胞 被罗马士兵包围。犹太士兵决定宁可自杀也不做俘虏，于是商量出了一个自杀方案。他
+        们围成一个圈，从一个人开始，数到第三个人时将第三个人杀死，然后再数，直到杀光 所有人。约瑟夫和另外一个人决定不参加这个疯狂的游戏，他们快速地计算出了两个位 置，站在那里得以幸存。写一段程序将 n 个人围成一圈，并且第 m
+        个人会被杀掉，计算 一圈人中哪两个人最后会存活。使用循环链表解决该问题。
+    </p>
+    <script>
+        // 实现一个链表
+        // Node类
+        function Node(element) {
+            this.element = element;
+            this.next = null;
+        }
+
+        // LinkedList 类
+        function LList() {
+            this.head = new Node('head');
+            this.head.next = this.head
+        }
+        LList.prototype = {
+            find: function (item) {
+                // 查找节点
+                let currentNode = this.head;
+                while (currentNode.element !== item && currentNode.next.element !== "head") { // 如果当前元素不等于查找元素，那么就重复赋值currentNode给下一个元素，直到找到为止
+                    currentNode = currentNode.next;
+                }
+                return currentNode;
+            },
+            insert: function (newElement, item) {
+                // 向链表插入节点
+                let newNode = new Node(newElement); // 定义新节点
+                let currentNode = this.find(item); // 查找需要插入的节点位置
+                newNode.next = currentNode.next; // 新节点的next 是指向当前节点的next，比如 head -> 1 -> 2，新节点3需要插入到1的位置，那么3的next指向就是1.head的next指向就是3。head -> 3 -> 1 -> 2
+                currentNode.next = newNode; // 当前节点的next指向新节点
+            },
+            findPrevious: function (item) {
+                let currentNode = this.head;
+                while (currentNode.next !== null && currentNode.next.element !== item && currentNode.next.element !== "head") {
+                    currentNode = currentNode.next;
+                }
+                return currentNode;
+            },
+            remove: function (item) {
+                // 刪除节点
+                let prevNode = this.findPrevious(item); // 先获取该节点的上一节点
+                if (prevNode.next !== null && prevNode.next.element !== "head") {
+                    prevNode.next = prevNode.next.next; // 直接将上一节点的next指向改为当前节点的下一节点，跳过当前节点。
+                }
+            },
+            display: function () {
+                let currentNode = this.head;
+                let r = ''
+                while (currentNode.next !== null && currentNode.next.element !== "head") {
+                    r += currentNode.next.element + ' -> '
+                    currentNode = currentNode.next;
+                }
+                console.log('head -> ' + r + 'null');
+            },
+            advance: function (n) {
+                let currentNode = this.head
+                while (n > 0) {
+                    if (currentNode.next.element == "head") {
+                        currentNode = currentNode.next.next;
+                    } else {
+                        currentNode = currentNode.next;
+                    }
+                    n--;
+                }
+                return currentNode
+            },
+            count: function () {
+                let i = 0;
+                let currentNode = this.head;
+                while (currentNode.next !== null && currentNode.next.element !== 'head') {
+                    currentNode = currentNode.next;
+                    i++;
+                }
+                return i
+            }
+        }
+        //  传说在公元 1 世纪的犹太战争中，犹太历史学家弗拉维奥·约瑟夫斯和他的 40 个同胞 被罗马士兵包围。犹太士兵决定宁可自杀也不做俘虏，于是商量出了一个自杀方案。他 们围成一个圈，从一个人开始，数到第三个人时将第三个人杀死，然后再数，直到杀光 所有人。约瑟夫和另外一个人决定不参加这个疯狂的游戏，他们快速地计算出了两个位 置，站在那里得以幸存。写一段程序将 n 个人围成一圈，并且第 m 个人会被杀掉，计算 一圈人中哪两个人最后会存活。使用循环链表解决该问题。
+
+        function fn(n, m) {
+            this.lList = new LList();
+            this.n = n;
+            this.m = m
+        }
+        fn.prototype = {
+            // 生成链表
+            creatList: function () {
+                for (let i = 0; i < this.n; i++) {
+                    i == 0 ? this.lList.insert(i, 'head') : this.lList.insert(i, i - 1)
+                }
+            },
+
+            deleteElement: function () {
+                while (this.lList.count() > this.m - 1) {
+                    console.log(this.lList.advance(this.m).element);
+                    this.lList.remove(this.lList.advance(this.m).element)
+                }
+                this.lList.display()
+            }
+        }
+        let fn1 = new fn(8, 3)
+        fn1.creatList()
+        fn1.deleteElement()
+    </script>
+</body>
+
+</html>
