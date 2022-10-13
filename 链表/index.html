@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>链表结构</title>
+</head>
+
+<body>
+    <p>
+        链表是由一组节点组成的集合。每个节点都使用一个对象的引用指向它的后继。指向另一个节点的引用叫做链。
+    </p>
+    <p>
+        数组元素靠它们的位置进行引用，链表元素则是靠相互之间的关系进行引用。<br />
+        <strong>1 -> 2 -> 3 -> null</strong><br />
+        我们说 2 跟在 1 后面，而不说 2 是链表中的第二个元素。遍历链表，就是跟着链接，从链表的首元素一直走到尾元素（但这不包含链表的头节点，头节点常常用来作为 链表的接入点）。另外一个值得注意的地方是，链表的尾元素指向一个
+        null 节点
+    </p>
+
+    <script>
+        // 实现一个链表
+
+        // Node类
+        function Node(element) {
+            this.element = element;
+            this.next = null;
+        }
+
+        // LinkedList 类
+        function LList() {
+            this.head = new Node('head');
+        }
+        LList.prototype = {
+            find: function (item) {
+                // 查找节点
+                let currentNode = this.head;
+                while (currentNode.element !== item) { // 如果当前元素不等于查找元素，那么就重复赋值currentNode给下一个元素，直到找到为止
+                    currentNode = currentNode.next;
+                }
+                return currentNode;
+            },
+            insert: function (newElement, item) {
+                // 向链表插入节点
+                let newNode = new Node(newElement); // 定义新节点
+                let currentNode = this.find(item); // 查找需要插入的节点位置
+                newNode.next = currentNode.next; // 新节点的next 是指向当前节点的next，比如 head -> 1 -> 2，新节点3需要插入到1的位置，那么3的next指向就是1.head的next指向就是3。head -> 3 -> 1 -> 2
+                currentNode.next = newNode; // 当前节点的next指向新节点
+            },
+            findPrevious: function (item) {
+                let currentNode = this.head;
+                while (currentNode.next !== null && currentNode.next.element !== item) {
+                    currentNode = currentNode.next;
+                }
+                return currentNode;
+            },
+            remove: function (item) {
+                // 刪除节点
+                let prevNode = this.findPrevious(item); // 先获取该节点的上一节点
+                if (prevNode.next !== null) {
+                    prevNode.next = prevNode.next.next; // 直接将上一节点的next指向改为当前节点的下一节点，跳过当前节点。
+                }
+            },
+            display: function () {
+                let currentNode = this.head;
+                let r = ''
+                while (currentNode.next !== null) {
+                    r += currentNode.next.element + ' -> '
+                    currentNode = currentNode.next;
+                }
+                console.log('head -> ' + r + 'null');
+            },
+        }
+
+        let testList = new LList();
+        testList.insert("1", "head");
+        testList.insert("2", "1");
+        testList.insert("3", "head");
+        testList.insert("4", "2");
+        testList.display() // head -> 3 -> 1 -> 2 -> 4 -> null
+        console.log(testList.find('head'))
+        console.log(testList.findPrevious('3'))
+        console.log(testList.remove('3'))
+        testList.display() // head -> 1 -> 2 -> 4 -> null
+
+    </script>
+</body>
+
+</html>
