@@ -30,7 +30,8 @@
         // LinkedList 类
         function LList() {
             this.head = new Node('head');
-            this.head.next = this.head
+            this.head.next = this.head;
+            this.currentNode = this.head
         }
         LList.prototype = {
             find: function (item) {
@@ -72,16 +73,15 @@
                 console.log('head -> ' + r + 'null');
             },
             advance: function (n) {
-                let currentNode = this.head
                 while (n > 0) {
-                    if (currentNode.next.element == "head") {
-                        currentNode = currentNode.next.next;
+                    if (this.currentNode.next.element === "head") {
+                        this.currentNode = this.currentNode.next.next; // 如果下一节点是head，那么跳过头部节点
                     } else {
-                        currentNode = currentNode.next;
+                        this.currentNode = this.currentNode.next;
                     }
                     n--;
                 }
-                return currentNode
+                return this.currentNode
             },
             count: function () {
                 let i = 0;
@@ -95,30 +95,29 @@
         }
         //  传说在公元 1 世纪的犹太战争中，犹太历史学家弗拉维奥·约瑟夫斯和他的 40 个同胞 被罗马士兵包围。犹太士兵决定宁可自杀也不做俘虏，于是商量出了一个自杀方案。他 们围成一个圈，从一个人开始，数到第三个人时将第三个人杀死，然后再数，直到杀光 所有人。约瑟夫和另外一个人决定不参加这个疯狂的游戏，他们快速地计算出了两个位 置，站在那里得以幸存。写一段程序将 n 个人围成一圈，并且第 m 个人会被杀掉，计算 一圈人中哪两个人最后会存活。使用循环链表解决该问题。
 
-        function fn(n, m) {
+        function Survive(n, m) {
             this.lList = new LList();
             this.n = n;
             this.m = m
         }
-        fn.prototype = {
+        Survive.prototype = {
             // 生成链表
             creatList: function () {
-                for (let i = 0; i < this.n; i++) {
-                    i == 0 ? this.lList.insert(i, 'head') : this.lList.insert(i, i - 1)
+                for (let i = 1; i <= this.n; i++) {
+                    i == 1 ? this.lList.insert(i, 'head') : this.lList.insert(i, i - 1)
                 }
+                return this
             },
 
             deleteElement: function () {
-                while (this.lList.count() > this.m - 1) {
-                    console.log(this.lList.advance(this.m).element);
+                while (this.lList.count() >= this.m) {
                     this.lList.remove(this.lList.advance(this.m).element)
                 }
                 this.lList.display()
             }
         }
-        let fn1 = new fn(8, 3)
-        fn1.creatList()
-        fn1.deleteElement()
+        let survive = new fn(40, 3)
+        survive.creatList().deleteElement()
     </script>
 </body>
 
