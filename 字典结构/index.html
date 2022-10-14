@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>字典结构</title>
+</head>
+
+<body>
+    <p>
+        字典是一种以键值对形式(key: value)存储数据的数据结构，类似电话号码簿里的名字和电话号码。要找一个电话时，名字找到了，它的电话号码也就找到了。
+        Object 类就是以字典的形式设计的
+    </p>
+    <script>
+        // 实现字典结构
+        function Dictionary(params) {
+            this.dataStore = [];
+        }
+        Dictionary.prototype = {
+            add: function (key, value) {
+                this.dataStore[key] = value;
+            },
+            find: function (key) {
+                return this.dataStore[key];
+            },
+            remove: function (key) {
+                delete this.dataStore[key];
+            }
+        }
+        var pbook = new Dictionary();
+        pbook.add("Mike", "123");
+        pbook.add("David", "345");
+        pbook.add("Cynthia", "456");
+        console.log(pbook)
+        console.log("David's extension: " + pbook.find("David"));
+        pbook.remove("David");
+    </script>
+</body>
+
+</html>
