@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>集合</title>
+</head>
+<body>
+    <script>
+        function Set () {
+            this.items = {}
+        }
+        Set.prototype =  {
+            add: function (value) {
+                if (this.has(value)) {
+                    return false;
+                }
+                this.items[value] = value;
+                return true;
+            },
+            has: function (value) {
+                return this.items.hasOwnProperty(value);
+            },
+            remove: function (value) {
+                if (!this.has(value)) {
+                    return false;
+                }
+                delete this.items[value];
+            },
+            clear: function () {
+                this.items = {};
+            },
+            size: function () {
+                return Object.keys(this.items).length;
+            },
+            values: function () {
+                return Object.values(this.items);
+            }
+        }
+
+        let set = new Set()
+        console.log(set.add('first')) // true
+        console.log(set.add('second')) // true
+        console.log(set.add('first')) // false
+        // console.log(set.values()) // first second
+        // console.log(set.remove('first')) 
+        // console.log(set.values()) // second
+        // console.log(set.size()) // 1
+        // console.log(set.clear())
+        // console.log(set.values()) // []
+
+        // 集合之间的操作
+
+        Set.prototype.union = function (otherSet) { // 求并集
+            let unionSet = new Set();
+            let values = this.values();
+            for (let i = 0; i < values.length; i++) {
+                unionSet.add(values[i])
+            }
+            return unionSet
+        }        
+    </script>
+</body>
+</html>
