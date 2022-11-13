@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>哈希算法</title>
+  </head>
+  <body>
+    <script>
+      function HashTable() {
+        this.storage = [];
+        this.count = 0;
+        this.limit = 7;
+      }
+      HashTable.prototype = {
+        // 将字符串转换成数字的哈希函数
+        hashFunc: function (str, size) {
+          let hashCode = 0;
+
+          for (let i = 0; i < str.length; i++) {
+            hashCode = 37 * hashCode + str.charCodeAt(i);
+          }
+
+          let index = hashCode % size;
+
+          return index;
+        },
+        // 插入&修改
+        put: function (key, value) {
+            let index = this.hashFunc(key, this.limit);
+            let bucket = this.storage[index];
+            // 不存在
+            if (!bucket) {
+                bucket = [];
+                this.storage[index] = bucket;
+            }
+            // 修改操作
+            for (let i = 0; i < bucket.length; i++) {
+                let tuple = bucket[i];
+                if (tuple[0] == key) {
+                    tuple[1] = value
+                    return
+                }
+            }
+            // 插入操作
+            bucket.push([key,value])
+            this.count ++;
+            if (this.count > this.limit * .75) {
+              let newLimit = this.getPrime(this.limit * 2);
+              this.resize(newLimit)
+            }
+            console.log(this.limit);
+        },
+        get: function (key) {
+            let index = this.hashFunc(key,this.limit);
+            let bucket = this.storage[index];
+            if (!bucket) {
+                return null
+            }
+            for (let i = 0; i < bucket.length; i++) {
+                let tuple = bucket[i];
+                if (tuple[0] == key) {
+                    return tuple[1]
+                }
+            }
+            return null;
+        },
+        // 删除操作
+        remove: function (key) {
+            let index = this.hashFunc(key, this.limit);
+            let bucket = this.storage[index];
+            if (!bucket) {
+                return null
+            }
+            for (let i = 0; i < bucket.length; i++) {
+                let tuple = bucket[i];
+                if (tuple[0] == key) {
+                    bucket.splice(i,1)
+                    this.count --
+                    return tuple[1];
+                    if (this.limit > 7 && this.count < this.limit * .25) {
+                      let newLimit = this.getPrime(Math.floor(this.limit/2))
+                      this.resize(newLimit)
+                    }
+                }
+            }
+            return null;
+        },
+        // 获取数量
+        size: function () {
+            return this.count
+        },
+        // 判断是否为空
+        isEmpty: function () {
+            return !this.count
+        },
+        // 对哈希表进行扩容或者缩容
+        resize: function (newLimit) {
+          let oldStorage = this.storage;
+          this.storage = [];
+          this.limit = newLimit;
+          this.count = 0;
+          for (let i = 0; i < oldStorage.length; i++) {
+              let bucket = oldStorage[i];
+              if (!bucket) {
+                continue
+              }
+              for (let j = 0; j < bucket.length; j++) {
+                let tuple = bucket[j];
+                this.put(tuple[0], tuple[1])
+              }
+          }
+        },
+        // 判断是否为质数
+        isPrime: function(num) {
+          let temp = parseInt(Math.sqrt(num));
+          for (let i = 2; i <= temp; i++) {
+            if (num % i == 0) {
+              return false;
+            }
+          }
+          return true;
+        },
+        
+        // 获取质数
+        getPrime: function (num) {
+            while (!this.isPrime(num)) {
+                num++
+            }
+            return num
+        }
+      };
+      const hashtable = new HashTable()
+      hashtable.put('first', 'abc')
+      hashtable.put('second', 'cba')
+      hashtable.put('third', 'def')
+      hashtable.put('first1', 'def2')
+      hashtable.put('second2', 'def3')
+      hashtable.put('third3', 'def4')
+      hashtable.put('first2', 'def5')
+      hashtable.put('third4', 'def6')
+      console.log(hashtable.size())
+      console.log(hashtable)
+
+    </script>
+  </body>
+</html>
