@@ -7,6 +7,52 @@
     <title>树结构</title>
 </head>
 <body>
-    <script></script>
+    <div>完美二叉树（满二叉树）：指除了叶子节点，所有子节点都为2的二叉树</div>
+    <div>完全二叉树：除最后一层外，其他各层的节点数都达到最大个数。且最后一层从左向右的叶子节点连续存在，只缺失右侧若干节点。</div>
+    <ul>
+        <li>二叉树第i层的最大节点数为：2^(i-1)，i>=1</li>
+        <li>
+            深度为K的二叉树最大节点总数为：2^k - 1， k>=1
+        </li>
+        <li>
+            对任何非空二叉树T，若N0便是叶节点数，N2是度为2的非叶节点个数，那么两者满足关系N0 = N2 + 1
+        </li>
+        <li>
+            （叶子节点指不存在子节点）
+        </li>
+        <li>（度是指树中所有节点的度数的最大值。1度就代表只有一个子节点或者它是单子树，2度就代表有两个子节点或是左右子树都有，二叉树就是一个连通的无环图，并且每一个顶点的度不大于3。）
+        </li>
+    </ul>
+        
+    <div>BST（Binary Search Tree）二叉查找树/二叉搜索树/二叉排序树</div>
+    <ul>
+        <li>二叉搜索树可以为空，如果不为空则满足以下性质</li>
+        <li>非空左子树的所有键值小于其根节点的键值</li>
+        <li>非空右子树的所有键值大于根节点的键值</li>
+        <li>左右子树本书也是二叉搜索树</li>
+    </ul>
+    <script>
+        function BinarySearchTree() {
+            this.root = null;
+        }
+        BinarySearchTree.prototype = {
+            Node: function (key) {
+                this.key = key;
+                this.left = null;
+                this.right = null;
+            },
+            insert: function (key) {},
+            search: function (key) {},
+            remove: function (key) {},
+            min: function () {},
+            max: function () {},
+            // 中序遍历所有节点
+            inOrderTraverse: function () {},
+            // 先序遍历所有节点
+            preOrderTraverse: function () {},
+            // 后序遍历所有节点
+            postOrderTraverse: function () {},
+        }
+    </script>
 </body>
 </html>
