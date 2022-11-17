@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>树结构</title>
 </head>
+
 <body>
     <div>完美二叉树（满二叉树）：指除了叶子节点，所有子节点都为2的二叉树</div>
     <div>完全二叉树：除最后一层外，其他各层的节点数都达到最大个数。且最后一层从左向右的叶子节点连续存在，只缺失右侧若干节点。</div>
@@ -23,7 +25,7 @@
         <li>（度是指树中所有节点的度数的最大值。1度就代表只有一个子节点或者它是单子树，2度就代表有两个子节点或是左右子树都有，二叉树就是一个连通的无环图，并且每一个顶点的度不大于3。）
         </li>
     </ul>
-        
+
     <div>BST（Binary Search Tree）二叉查找树/二叉搜索树/二叉排序树</div>
     <ul>
         <li>二叉搜索树可以为空，如果不为空则满足以下性质</li>
@@ -34,6 +36,7 @@
     <script>
         function BinarySearchTree() {
             this.root = null;
+            this.result = "";
         }
         BinarySearchTree.prototype = {
             Node: function (key) {
@@ -41,18 +44,223 @@
                 this.left = null;
                 this.right = null;
             },
-            insert: function (key) {},
-            search: function (key) {},
-            remove: function (key) {},
-            min: function () {},
-            max: function () {},
-            // 中序遍历所有节点
-            inOrderTraverse: function () {},
+            insert: function (key) {
+                // 创建节点
+                let newNode = new this.Node(key);
+                // 判断是否存在根节点
+                if (!this.root) {
+                    this.root = newNode;
+                } else {
+                    this.insertNode(this.root, newNode);
+                }
+            },
+            searchToRecursion: function (key, node = '') { // 递归实现
+                let currentNode = node || this.root;
+                if (node === null) return `递归搜索的值为${key}，不存在于树中`;
+                if (currentNode.key > key) {
+                    currentNode = currentNode.left;
+                    return this.searchToRecursion(key, currentNode);
+                } else if (currentNode.key < key) {
+                    currentNode = currentNode.right;
+                    return this.searchToRecursion(key, currentNode);
+                } else {
+                    return `递归搜索的值为${currentNode.key}，存在于树中`;
+                }
+            },
+            searchToLoop: function (key) {
+                let node = this.root;
+                while (node) {
+                    if (node.key > key) {
+                        node = node.left;
+                    } else if (node.key < key) {
+                        node = node.right;
+                    } else {
+                        return `循环搜索的值为${node.key}，存在于树中`;
+                    }
+                }
+                return `循环搜索的值为${key}，不存在于树中`;
+            },
+            remove: function (key) {
+                let currentNode = this.root;
+                let parent = null; // 需要删除节点的父节点
+                let isLeft = true; // 是否为左子节点
+                while (currentNode.key != key) { // 查找需要删除的节点
+                    parent = currentNode; // 每次替换节点之前赋值，就是新节点的父节点
+                    if (currentNode.key > key) { // 如果大于查找的节点，那么往左查找
+                        isLeft = true;
+                        currentNode = currentNode.left;
+                    } else { // 如果小于查找的节点，那么往右查找
+                        isLeft = false;
+                        currentNode = currentNode.right;
+                    }
+                    if (!currentNode) { // 未找到该节点，直接return
+                        return false;
+                    }
+                }
+                if (!currentNode.left && !currentNode.right) { // 需要删除的为叶子节点（不存在子节点）所以.left和.right都为null
+                    if (currentNode === this.root) { // 如果当前节点是根节点
+                        this.root = null;
+                    } else { // 如果不是根节点，那么判断是否是在左边查找出来的，如果是那么左节点直接赋值为null，不是则相反
+                        isLeft ? currentNode.left = null : currentNode.right = null;
+                    }
+                } else if (!currentNode.right) { // 需要删除的节点存在一个左子节点） 
+                    if (currentNode = this.root) { // 如果当前节点是根节点
+                        this.root = currentNode.left;
+                    } else { // 如果不是根节点，那么判断是否是在左边查找出来的，如果是那么左节点直接赋值为null，不是则相反
+                        isLeft ? parent.left = currentNode.left : parent.right = currentNode.left;
+                    }
+                } else if (!currentNode.left) { // 需要删除的节点存在一个右子节点
+                    if (currentNode = this.root) {
+                        this.root = currentNode.right;
+                    } else {
+                        isLeft ? parent.left = currentNode.right : parent.right = currentNode.right;
+                    }
+                } else { // 需要删除的节点存在两个子节点
+                    let successor = this.getSuccessor(currentNode) // 获取后继节点
+                    if (currentNode == this.root) {
+                        this.root = successor
+                    } else if (isLeft) {
+                        parent.left = successor
+                    } else {
+                        parent.right = successor
+                    }
+                    successor.left = currentNode.left
+                }
+                console.log(parent)
+            },
+            min: function () {
+                let node = this.root;
+                let key = null;
+                while (node != null) {
+                    key = node.key;
+                    node = node.left;
+                }
+                return key;
+            },
+            max: function () {
+                let node = this.root;
+                let key = null;
+                while (node != null) {
+                    key = node.key;
+                    node = node.right;
+                }
+                return key;
+            },
             // 先序遍历所有节点
-            preOrderTraverse: function () {},
+            // 1、访问根节点；2、先序遍历左子树；3、先序遍历右子树
+            preOrderTraverse: function () {
+                this.result = "";
+                this.preOrderTraverseNode(this.root);
+                console.log("先序遍历", this.result);
+                this.result = "";
+            },
+            // 中序遍历所有节点 child
+            // 1、中序遍历左子树；2、访问根节点；3、中序遍历右子树
+            midOrderTraverse: function () {
+                this.result = "";
+                this.midOrderTraverseNode(this.root);
+                console.log("中序遍历", this.result);
+                this.result = "";
+            },
             // 后序遍历所有节点
-            postOrderTraverse: function () {},
+            // 1、后序遍历左子树；2、后序遍历右子树；3、访问根节点
+            postOrderTraverse: function () {
+                this.result = "";
+                this.postOrderTraverseNode(this.root);
+                console.log("后序遍历", this.result);
+                this.result = "";
+            },
+            insertNode: function (node, newNode) {
+                if (newNode.key < node.key) { // 当新节点小于上一个节点的值，那么往左子树进行查找
+                    if (!node.left) {
+                        node.left = newNode; // 如果左节点为null，直接赋值
+                    } else {
+                        this.insertNode(node.left, newNode); // 不为null，继续递归遍历左子树
+                    }
+                } else {
+                    if (!node.right) {
+                        node.right = newNode; // 如果右节点为null，直接赋值
+                    } else {
+                        this.insertNode(node.right, newNode); // 不为null，继续递归遍历右子树
+                    }
+                }
+            },
+            preOrderTraverseNode: function (node) {
+                if (node) {
+                    this.result += node.key + '-';
+                    this.preOrderTraverseNode(node.left);
+                    this.preOrderTraverseNode(node.right);
+                }
+            },
+            midOrderTraverseNode: function (node) {
+                if (node) {
+                    this.midOrderTraverseNode(node.left);
+                    this.result += node.key + '-';
+                    this.midOrderTraverseNode(node.right);
+                }
+            },
+            postOrderTraverseNode: function (node) {
+                if (node) {
+                    this.midOrderTraverseNode(node.left);
+                    this.midOrderTraverseNode(node.right);
+                    this.result += node.key + '-';
+                }
+            },
+            getSuccessor: function (delNode) {
+                let successor = delNode;
+                let successorParent = delNode;
+                let currentNode = delNode.right;
+                while (currentNode) {
+                    successorParent = successor;
+                    successor = currentNode
+                    currentNode = currentNode.left
+                }
+                if (successor != delNode.right) {
+                    successorParent.left = successor.right
+                    successor.right = delNode.right;
+                }
+                console.log('successor', successor);
+                return successor;
+            }
         }
+        const bst = new BinarySearchTree();
+        bst.insert(11);
+        bst.insert(7);
+        bst.insert(15);
+        bst.insert(5);
+        bst.insert(3);
+        bst.insert(9);
+        bst.insert(8);
+        bst.insert(10);
+        bst.insert(13);
+        bst.insert(12);
+        bst.insert(14);
+        bst.insert(20);
+        bst.insert(18);
+        bst.insert(25);
+        bst.insert(6);
+        console.log('bst', bst);
+        console.log("最小值", bst.min());
+        console.log("最大值", bst.max());
+        console.log(bst.searchToRecursion(18));
+        console.log(bst.searchToRecursion(25));
+        console.log(bst.searchToRecursion(99));
+        console.log(bst.searchToRecursion(100));
+
+        console.log(bst.searchToLoop(18));
+        console.log(bst.searchToLoop(25));
+        console.log(bst.searchToLoop(100));
+        console.log(bst.searchToLoop(99));
+        bst.preOrderTraverse();
+        bst.midOrderTraverse();
+        bst.postOrderTraverse();
+        bst.remove(9);
+        bst.remove(7);
+        bst.remove(15);
+        console.log('bst', bst);
+        bst.postOrderTraverse();
+
     </script>
 </body>
+
 </html>
