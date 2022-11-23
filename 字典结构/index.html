@@ -16,26 +16,36 @@
     <script>
         // 实现字典结构
         function Dictionary(params) {
-            this.dataStore = [];
+            this.dataStore = {};
         }
         Dictionary.prototype = {
             add: function (key, value) {
                 this.dataStore[key] = value;
             },
             find: function (key) {
-                return this.dataStore[key];
+                return this.dataStore.hasOwnProperty(key);
             },
             remove: function (key) {
+                if (!this.find(key)) return false;
                 delete this.dataStore[key];
+                 return true;
+            },
+            get: function (key) {
+                return this.find(key) ? this.dataStore[key] : undefined;
+            },
+            keys: function () {
+                return Object.keys(this.dataStore);
+            },
+            values: function () {
+                return Object.values(this.dataStore);
+            },
+            size: function () {
+                return Object.keys(this.dataStore).length;
+            },
+            clear: function () {
+                this.dataStore = {};
             }
         }
-        var pbook = new Dictionary();
-        pbook.add("Mike", "123");
-        pbook.add("David", "345");
-        pbook.add("Cynthia", "456");
-        console.log(pbook)
-        console.log("David's extension: " + pbook.find("David"));
-        pbook.remove("David");
     </script>
 </body>
 
