@@ -1,12 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>希尔排序算法</title>
 </head>
+
 <body>
-    
+    <div>
+        计算间隔： 初始间距是N/2，将每趟的排序切分。eg：数组N=100，增量间隔为50,25,12,6,3,1
+    </div>
+    <script>
+        const nums = [666, 6, 8, 3, 5, 100, 221, 525, 679, 2, 123, 556, 863, 999, 224];
+
+        function shellSort(nums) {
+            // 1、计算第一次循环使用的间隔gap
+            let gap = Math.floor(nums.length / 2);
+            // 2、如果间隔不为1，不中断循环
+            while (gap >= 1) {
+                // 3、 循环数组，i为gap
+                for (let i = gap; i < nums.length; i++) {
+                    let tem = nums[i];
+                    let j = i;
+                    // 4、当前的值小于前面间隔下标的值，以及当前的下标不越界
+                    while (nums[j - gap] > tem && j > gap -1) {
+                        nums[j] = nums[j - gap]; // 5、替换当前下标的值，改为前面大于自身元素的值
+                        j -= gap; // j = j - gap，获取当前的值需要插入的下标
+                    }
+                    nums[j] = tem; // 当前的值插入到正确的位置
+                }
+                gap = Math.floor(gap / 2); // 循环完第一次的gap，重新计算gap
+            }
+            return nums
+        }
+        console.log(shellSort(nums));
+    </script>
 </body>
+
 </html>

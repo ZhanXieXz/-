@@ -9,6 +9,9 @@
 </head>
 
 <body>
+    <div>
+        插入排序存在的问题：假设数组中最小的位置出现的末尾，那么进行排序时就会出现这个值需要将前面所有的元素都进行对比，才能正确的放在数组的开头
+    </div>
     <script>
         const nums = [666, 6, 8, 3, 5, 100, 221, 525, 679, 2, 123, 556, 863, 999, 224,123,5,467,457,342,562,5,235,235,26,23,476,3457,3,5474,57,45];
 
@@ -36,54 +39,3 @@
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function insertionSort(nums) {
-for (let i = 1; i < nums.length; i++) { let tem=nums[i]; let j=i; while (nums[j - 1]> tem && j > 0) {
-    nums[j] = nums[j - 1];
-    j--
-    }
-    nums[j] = tem;
-    }
-    return nums;
-    }
-    console.log(insertionSort(nums));
