@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>选择排序算法</title>
+</head>
+
+<body>
+    <div>
+        选择排序的交换次数有冒泡排序的O(N²)减少到O(N)
+        <br>
+        比较次数仍是O(N²)
+        <br>
+        选择排序思路：
+        <ul>
+            <li>选择第一个索引位置，然后与其他元素进行比较</li>
+            <li>如果后面的元素小于第一个索引位置，那么交换位置</li>
+            <li>依次进行循环，每次排出大于上一次的元素</li>
+        </ul>
+        <br>
+    </div>
+    <script>
+        const nums = [666, 6, 8, 3, 5, 100, 221, 525, 679, 2, 123, 556, 863, 999, 224];
+        function selectionSort (nums) {
+            for (let j = 0; j < nums.length-1; j++) {
+                let min = j;
+                for (let i = min + 1; i < nums.length; i++) {
+                    if (nums[min] > nums[i]) {
+                        min = i;
+                    }
+                }
+                console.log(min);
+                let tem = nums[j];
+                console.log('tem', tem);
+                nums[j] = nums[min];
+                nums[min] =tem;
+            }
+            return nums;
+        }
+        console.log(selectionSort(nums));
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
